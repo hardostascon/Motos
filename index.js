@@ -16,8 +16,14 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 const userRoutes= require("./routes/user");
+const MarcaRoutes= require("./routes/marca");
 
 app.use("/api/user",userRoutes);
+
+app.use("/api/marca",MarcaRoutes);
+
+
+
 
 app.get("/pruebitas",(req,res)=>{
    return res.status(200).json({
