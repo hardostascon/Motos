@@ -10,7 +10,8 @@ const connectionData = {
 
  const connection = async() => {
     try{
-         new Client(connectionData)
+         new Client(connectionData);
+         console.log("Te has conectado a la base de datos");
     } catch(error){
         console.log(error);
         throw new Error("No se pudo conectar a la Base de datos");
@@ -19,3 +20,5 @@ const connectionData = {
  }
 
 //const client = new Client(connectionData);
+
+module.exports=connection;
