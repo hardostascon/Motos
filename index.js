@@ -14,6 +14,16 @@ app.use(cors());
 app.use(express.json());
 
 app.use(express.urlencoded({extended:true}));
+
+
+app.get("/pruebitas",(req,res)=>{
+   return res.status(200).json({
+       "Titulo" :"Patos Criollos",
+       "Descripcion" : "Historia de los Muscovy Ducks"
+   })
+});
+
 app.listen(port,()=>{
     console.log("El servidor corre!!");
-})
+});
+
