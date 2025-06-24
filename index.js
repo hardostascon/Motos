@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const connection= require("./database/connection");
 
-connection();
+//connection();
 
 const app= express();
 

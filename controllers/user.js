@@ -1,6 +1,8 @@
 const validate = require("../helpers/validate-user");
+const UserRepository = require('../repositories/user');
+const user = require("../models/user");
 
-const register = (req, res) => {
+const register = async (req, res) => {
 
      let body = req.body;
 
@@ -11,12 +13,28 @@ const register = (req, res) => {
      } catch (error) {
 
           return res.status(400).json({
-          status: "error",
-          message: "Validacion de usuario no superada"
-          
-     });
+               status: "error",
+               message: "Validacion de usuario no superada"
+
+          });
 
      }
+
+     try {
+          console.log(body.email);
+          const existingUser = await UserRepository.findByEmail(body.email);
+         
+
+     } catch (e) {
+              console.log(e);
+              return res.status(400).json({
+               status: "error",
+               message: "El usuario ya esta registrado"
+              
+
+          });
+     }
+
 
      return res.status(200).json({
           status: 200,

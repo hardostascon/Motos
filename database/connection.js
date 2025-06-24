@@ -8,17 +8,14 @@ const connectionData = {
   port: 5432
 }
 
- const connection = async() => {
-    try{
-         new Client(connectionData);
-         console.log("Te has conectado a la base de datos");
-    } catch(error){
-        console.log(error);
-        throw new Error("No se pudo conectar a la Base de datos");
 
-    }
- }
+const connection = new Client(connectionData);
 
-//const client = new Client(connectionData);
+connection.connect()
+  .then(() => console.log("Te has conectado a la base de datos"))
+  .catch((error) => {
+    console.log(error);
+    throw new Error("No se pudo conectar a la Base de datos");
+  });
 
-module.exports=connection;
+module.exports = connection;
