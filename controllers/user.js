@@ -1,8 +1,12 @@
 const register = (req,res) =>{
+      
+     let body = req.body;
+
      return res.status(200).json({
        status:200,
-       message:"Accion Para registrar usuario"
-   })
+       message:"Accion Para registrar usuario",
+       data:body
+   }) 
 }
 
 
