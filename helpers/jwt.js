@@ -11,5 +11,12 @@ const  createToken = (user) =>{
         email:user.email, 
         iat: now, 
         exp: expiration
-    }
+    };
+
+    return  jwt.encode(payLoad,secret);
+}
+
+module.exports={
+    createToken,
+    secret
 }
