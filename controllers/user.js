@@ -23,27 +23,27 @@ const register = async (req, res) => {
 
      try {
           console.log(body.email);
-          const existingUser = await UserRepository.findByEmail(body.email,1);
-         
+          const existingUser = await UserRepository.findByEmail(body.email, 1);
+
 
      } catch (e) {
-              console.log(e);
-              return res.status(400).json({
+          console.log(e);
+          return res.status(400).json({
                status: "error",
                message: "El usuario ya esta registrado"
-              
+
 
           });
      }
 
      let password = await bcrypt.hash(body.password, 10);
-     body.password= password;
+     body.password = password;
      body.email = body.email.toLowerCase();
 
-     try{
-          let userToSave= await UserRepository.create(body);
-     }catch(e){
-            console.log(e);
+     try {
+          let userToSave = await UserRepository.create(body);
+     } catch (e) {
+          console.log(e);
      }
 
 
@@ -57,36 +57,39 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
 
-     let body = req.body; 
-     if(!body.email || !body.password){
+     let body = req.body;
+     if (!body.email || !body.password) {
           return res.status(400).json({
-          status: "error",
-          message: "Falta Datos por enviar"
-     });
-        
+               status: "error",
+               message: "Falta Datos por enviar"
+          });
+
      }
-     
-     
-      try {
+
+
+     try {
           console.log(body.email);
-          const User = await UserRepository.findByEmail(body.email,2);
+          const User = await UserRepository.findByEmail(body.email, 2);
 
-          let pwd = bcrypt.compareSync(body.password,User.password);
+          let pwd = bcrypt.compareSync(body.password, User.password);
 
-          if(!pwd){
-               
+          if (!pwd) {
+               return res.status(400).json({
+                    status: "error",
+                    message: "Contraseña no valida"
+               });
           }
-         
+
 
      } catch (e) {
-              console.log(e);
-              return res.status(400).json({
+          console.log(e);
+          return res.status(400).json({
                status: "error",
                message: "El usuario al buscar el usuario"
-              
+
 
           });
-     } 
+     }
      return res.status(200).json({
           status: 200,
           message: "Accion Para Identificar usuario"
