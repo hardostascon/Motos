@@ -2,6 +2,7 @@ const validate = require("../helpers/validate-user");
 const UserRepository = require('../repositories/user');
 const user = require("../models/user");
 const bcrypt = require('bcrypt');
+const jwt = require("../helpers/jwt");
 
 const register = async (req, res) => {
 
@@ -79,6 +80,18 @@ const login = async (req, res) => {
                     message: "Contraseña no valida"
                });
           }
+          let token = jwt.createToken(User);
+
+          return res.status(200).json({
+               status: 200,
+               message: "Accion Para Identificar usuario",
+               user:{
+                    _id:User._id,
+                    name:User.name,
+                    email:User.email
+               },
+               token
+          });
 
 
      } catch (e) {
@@ -90,10 +103,7 @@ const login = async (req, res) => {
 
           });
      }
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para Identificar usuario"
-     })
+     
 }
 
 
