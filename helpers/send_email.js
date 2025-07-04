@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Wrap in an async IIFE so we can use await.
-(async () => {
+const sendMail =  () => {
+   (async () => {
   const info = await transporter.sendMail({
     from: '"Maddison Foo Koch" <maddison53@ethereal.email>',
     to: "hardos34@hotmail.com",
@@ -22,4 +22,8 @@ const transporter = nodemailer.createTransport({
   });
 
   console.log("Message sent:", info.messageId);
+  console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
 })();
+}
+// Wrap in an async IIFE so we can use await.
+module.exports = sendMail;

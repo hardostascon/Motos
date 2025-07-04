@@ -1,4 +1,5 @@
 const validate = require("../helpers/validate-user");
+const send_email = require("../helpers/send_email");
 const UserRepository = require('../repositories/user');
 const user = require("../models/user");
 const bcrypt = require('bcrypt');
@@ -227,6 +228,22 @@ const changePassword = async (req, res) => {
      }
 }
 
+const EnviarRecuperador = async (req, res) => {
+      try{  
+           send_email();
+           return res.status(200).json({
+               status: 200,
+               message: "Accion Para enviar email de recuperacion",
+               data: "Email enviado correctamente"});
+
+      }catch(e){
+          console.log(e);
+          return res.status(400).json({
+               status: "error",
+               message: "Error al enviar el email de recuperacion"
+          });
+}
+}
 
 
 
@@ -237,7 +254,8 @@ module.exports = {
      login,
      profile,
      update,
-     changePassword
+     changePassword,
+     EnviarRecuperador
 
 
 
