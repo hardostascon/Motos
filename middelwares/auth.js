@@ -1,7 +1,10 @@
 const jwt = require("jwt-simple");
 const { secret } = require("../helpers/jwt");
 exports.auth = (req, res, next) => {
+    
     if (!req.headers.authorization) {
+
+
 
         return res.status(404).json({
             status:"error",
@@ -12,7 +15,7 @@ exports.auth = (req, res, next) => {
 
     let token = req.headers.authorization.replace(/['"]+/g, "");
     try {
-
+         console.log(token);
         let payLoad = jwt.decode(token,secret);
          let now = Math.floor(Date.now()/1000);
         if(payLoad.exp<=now){
@@ -34,5 +37,7 @@ exports.auth = (req, res, next) => {
             error: "Token Invalido"
         });
     }
+
+    next();
 
 }

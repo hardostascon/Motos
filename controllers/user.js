@@ -85,10 +85,10 @@ const login = async (req, res) => {
           return res.status(200).json({
                status: 200,
                message: "Accion Para Identificar usuario",
-               user:{
-                    _id:User._id,
-                    name:User.name,
-                    email:User.email
+               user: {
+                    _id: User._id,
+                    name: User.name,
+                    email: User.email
                },
                token
           });
@@ -103,49 +103,93 @@ const login = async (req, res) => {
 
           });
      }
+
+}
+
+
+const profile = async (req, res) => {
+
+     let id = req.params.id;
+     try {
+          
+          const user = await UserRepository.findById(id);
+          if (!user) {
+               return res.status(404).json({
+                    success: false,
+                    message: 'Usuario no encontrado'
+               });
+          }
+
+          return res.status(200).json({
+               status: "success",
+               user: user
+          })
+
+     } catch (e) {
+          return res.status(404).json({
+               success: false,
+               message: 'Error al buscar el usuario!!'
+          });
+     }
+
+}
+
+
+const update = async (req, res) => {
+      try{
+         const UserIdentiy = req.user;
+        // console.log(req.user);
+         let userToUpdate = {
+          name: req.body.name.toLowerCase() ?? UserIdentiy.name,
+          email: req.body.email.toLowerCase() ?? UserIdentiy.email
+          
+         
+         }
+         validate(userToUpdate,false);
+         const user = await UserRepository.findByEmail(userToUpdate.email, 2);
+
+         console.log(UserIdentiy);
+          console.log("ttt"+UserIdentiy.id+"tttt");
+         if (user && user._id != UserIdentiy.id) {
+              return res.status(400).json({
+                   status: "error",
+                   message: "El email ya esta en uso por otro usuario"
+              });
+         }
+           
+           const userUpdated = await UserRepository.update(user._id, userToUpdate); 
+
+         return res.status(200).json({
+          status: 200,
+          message: "Accion Para actualizar usuario",
+           UserIdentiy,
+           userToUpdate
+     })
+
+      }catch(e){
+          console.log(e);
+          return res.status(400).json({
+               status: "error",
+               message: "Error al actualizar el usuario"
+          });
+      }
+
      
 }
 
 
-const profile = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para registrar usuario"
-     })
-}
 
 
-const update = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para registrar usuario"
-     })
-}
 
-
-const upload = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para registrar usuario"
-     })
-}
-
-
-const Avatar = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para registrar usuario"
-     })
-}
 
 
 module.exports = {
      register,
      login,
      profile,
-     update,
-     upload,
-     Avatar
+     update
+    
+    
 
 
 }

@@ -13,10 +13,10 @@ class UserRepository {
             } else if (tipovalidacion == 2) {
                 if (result.rows[0] != undefined) {
                     return result.rows[0] ? new User(result.rows[0]) : null;
-                }else{
+                } else {
                     throw new Error("El usuario No existe");
                 }
-               
+
             }
             //return result.rows[0] ? new User(result.rows[0]) : null;
 
@@ -38,6 +38,46 @@ class UserRepository {
             const user = result.rows[0];
 
             return selectFields(user, ['id', 'name', 'email', 'uperfil', 'created_at']);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    static async findById(id) {
+        try {
+
+            const result = await Database.query('SELECT * FROM users WHERE id = $1', [id]);
+            const user = result.rows[0];
+
+
+            return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                perfil: user.uperfil,
+                created_at: user.created_at
+            };
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    static async update(id, userData) {
+        try {
+            // password = $3 userData.password
+            const result = await Database.query(
+                `UPDATE users 
+                 SET name = $1, email = $2, updated_at = NOW() 
+                 WHERE id = $3 
+                 RETURNING *`,
+                [userData.name, userData.email, id]
+            );
+            
+  
+            return result.rows[0] ? new User(result.rows[0]) : null;
         } catch (error) {
             throw error;
         }

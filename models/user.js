@@ -1,5 +1,6 @@
 class User {
   constructor(data = {}) {
+    this._id = data.id || null;
     this.name = data.name || '';
     this.email = data.email || '';
     this.password = data.password || '';
