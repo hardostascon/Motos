@@ -11,6 +11,7 @@ router.post("/login",UserController.login);
 router.get("/profile/:id",auth,UserController.profile);
 router.put("/update",auth,UserController.update);
 router.put("/changepsw",auth,UserController.changePassword);
+router.put("/sendemail",auth,UserController.EnviarRecuperador);
 
 
 module.exports = router;
