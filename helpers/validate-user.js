@@ -1,11 +1,14 @@
 const validator = require("validator");
 
-const validate = (params,withPassword=true) => {
+const validate = (params,withPassword=true ,withName=true) => {
     let validation = false;
-
-    let name = !validator.isEmpty(params.name) &&
+    let name = true;
+      if(withPassword){
+        let name = !validator.isEmpty(params.name) &&
         validator.isLength(params.name, { min: 3, max: 50 }) &&
         validator.isAlpha(params.name, "es-ES");
+      }
+    
 
     let email = !validator.isEmpty(params.email) &&
         validator.isEmail(params.email);

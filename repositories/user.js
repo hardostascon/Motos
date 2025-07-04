@@ -84,6 +84,26 @@ class UserRepository {
     }
 
 
+
+     static async updatepswd(id, userData) {
+        try {
+            // password = $3 userData.password
+            const result = await Database.query(
+                `UPDATE users 
+                 SET password = $1,  updated_at = NOW() 
+                 WHERE id = $2 
+                 RETURNING *`,
+                [userData.password, id]
+            );
+            
+  
+            return result.rows[0] ? new User(result.rows[0]) : null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 }
 
 module.exports = UserRepository;

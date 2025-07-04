@@ -111,7 +111,7 @@ const profile = async (req, res) => {
 
      let id = req.params.id;
      try {
-          
+
           const user = await UserRepository.findById(id);
           if (!user) {
                return res.status(404).json({
@@ -136,47 +136,95 @@ const profile = async (req, res) => {
 
 
 const update = async (req, res) => {
-      try{
-         const UserIdentiy = req.user;
-        // console.log(req.user);
-         let userToUpdate = {
-          name: req.body.name.toLowerCase() ?? UserIdentiy.name,
-          email: req.body.email.toLowerCase() ?? UserIdentiy.email
-          
-         
-         }
-         validate(userToUpdate,false);
-         const user = await UserRepository.findByEmail(userToUpdate.email, 2);
+     try {
+          const UserIdentiy = req.user;
+          // console.log(req.user);
+          let userToUpdate = {
+               name: req.body.name.toLowerCase() ?? UserIdentiy.name,
+               email: req.body.email.toLowerCase() ?? UserIdentiy.email
 
-         console.log(UserIdentiy);
-          console.log("ttt"+UserIdentiy.id+"tttt");
-         if (user && user._id != UserIdentiy.id) {
-              return res.status(400).json({
-                   status: "error",
-                   message: "El email ya esta en uso por otro usuario"
-              });
-         }
-           
-           const userUpdated = await UserRepository.update(user._id, userToUpdate); 
 
-         return res.status(200).json({
-          status: 200,
-          message: "Accion Para actualizar usuario",
-           UserIdentiy,
-           userToUpdate
-     })
+          }
+          validate(userToUpdate, false);
+          const user = await UserRepository.findByEmail(userToUpdate.email, 2);
 
-      }catch(e){
+          console.log(UserIdentiy);
+          console.log("ttt" + UserIdentiy.id + "tttt");
+          if (user && user._id != UserIdentiy.id) {
+               return res.status(400).json({
+                    status: "error",
+                    message: "El email ya esta en uso por otro usuario"
+               });
+          }
+
+          const userUpdated = await UserRepository.update(user._id, userToUpdate);
+
+          return res.status(200).json({
+               status: 200,
+               message: "Accion Para actualizar usuario",
+               UserIdentiy,
+               userToUpdate
+          })
+
+     } catch (e) {
           console.log(e);
           return res.status(400).json({
                status: "error",
                message: "Error al actualizar el usuario"
           });
-      }
+     }
 
-     
+
 }
 
+const changePassword = async (req, res) => {
+     try {
+          const UserIdentiy = req.user;
+
+          let userToUpdatePsw = {
+               password: req.body.password ?? UserIdentiy.password,
+               email: req.body.email.toLowerCase() ?? UserIdentiy.email
+          }
+          validate(userToUpdatePsw, false, false);
+          const user = await UserRepository.findByEmail(userToUpdatePsw.email, 2);
+
+          let pwd = bcrypt.compareSync(req.body.password,  user.password);
+
+          if (!pwd) {
+               let password = await bcrypt.hash(userToUpdatePsw.password, 10);
+               userToUpdatePsw.password = password;
+               
+          }
+
+          if (user && user._id != UserIdentiy.id) {
+               return res.status(400).json({
+                    status: "error",
+                    message: "El email ya esta en uso por otro usuario"
+               });
+          }
+
+             
+             const userChangePswd = await UserRepository.updatepswd(user._id, userToUpdatePsw);
+
+
+          return res.status(200).json({
+               status: 200,
+               message: "Accion Para actualizar contraseña",
+               UserIdentiy,
+               userToUpdatePsw
+          });
+
+
+
+
+     } catch (e) {
+          console.log(e);
+          return res.status(400).json({
+               status: "error",
+               message: "Error al cambiar la contraseña"
+          });
+     }
+}
 
 
 
@@ -187,9 +235,10 @@ module.exports = {
      register,
      login,
      profile,
-     update
-    
-    
+     update,
+     changePassword
+
+
 
 
 }
