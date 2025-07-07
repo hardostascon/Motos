@@ -1,5 +1,5 @@
 const Database = require('../database/connection');
-const User = require('../models/marca');
+const User = require('../models/marcas');
 class MarcaRepository {
      static async create(MarcaData) {
         try {

@@ -1,4 +1,16 @@
-const GuardarMarcas = (req,res) =>{
+const UserRepository = require('../repositories/marcas');
+
+const GuardarMarcas = async (req,res) =>{
+     let body = req.body; 
+     try {
+
+     }catch (error) {
+          console.log(error);
+          return res.status(500).json({
+               status:500,
+               message:"Error al guardar la marca"
+          })
+     }
      return res.status(200).json({
        status:200,
        message:"Accion Para Guardar Marcas"
