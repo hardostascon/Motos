@@ -11,16 +11,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = (email) => {
+const sendMail = (email,params) => {
 
   (async () => {
     const info = await transporter.sendMail(
       {
         from: '"Maddison Foo Koch" <maddison53@ethereal.email>',
         to: email,
-        subject: "Correo de Recuperacion ✔",
-        text: "Recuperacion de Contraseña", // plain‑text body
-        html: "<b>Hello world?</b>", // HTML body
+        subject: params.subject,
+        text: params.text, // plain‑text body
+        html: params.html, // HTML body
       });
 
   console.log("Message sent:", info.messageId);

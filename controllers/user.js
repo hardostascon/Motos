@@ -234,6 +234,11 @@ const EnviarRecuperador = async (req, res) => {
           let userToEmail = {
                email: req.body.email.toLowerCase() ?? UserIdentiy.email
           };
+          let ParamSendEmail={
+               subject: "Correo de Recuperacion ✔",
+               text: "Recuperacion de Contraseña", // plain‑text body
+               html: "Recibimos una solicitud para restablecer la contraseña de su cuenta de <b>"+userToEmail.email+"</b> .<br> Para garantizar la seguridad de su cuenta, requerimos la verificación en dos pasos para este proceso.  Haga clic en el siguiente enlace para iniciar el proceso de restablecimiento de contraseña: [Enlace de restablecimiento de contraseña]  <br> Ingrese la dirección de correo electrónico asociada a su cuenta.  Recibirá un código de verificación por Correo electrónico. <br> Ingrese el código de verificación en la página de restablecimiento de contraseña. <br> Siga las instrucciones en pantalla para crear una contraseña nueva y segura. <br> Si no solicitó el restablecimiento de contraseña, ignore este correo electrónico."
+          }
            validate(userToEmail, false, false);
            const user = await UserRepository.findByEmail(userToEmail.email, 2);
            if (!user) {
@@ -242,7 +247,7 @@ const EnviarRecuperador = async (req, res) => {
                     message: "El usuario no existe"
                });
            }
-           send_email(userToEmail.email);
+           send_email(userToEmail.email,ParamSendEmail);
            return res.status(200).json({
                status: 200,
                message: "Accion Para enviar email de recuperacion",
