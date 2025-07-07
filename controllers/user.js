@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require("../helpers/jwt");
 
 
-const register = async (req, res) => {
+const register = async (req, res) => { 
 
      let body = req.body;
 

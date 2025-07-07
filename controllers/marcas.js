@@ -1,8 +1,16 @@
-const UserRepository = require('../repositories/marcas');
+const MarcaRepository = require('../repositories/marcas');
 const validate = require("../helpers/validate-marca");
 const GuardarMarcas = async (req,res) =>{
      let body = req.body; 
      try {
+         
+          validate(body);
+
+          try {
+               let MarcaToSave = await MarcaRepository.create(body);
+          } catch (e) {
+               console.log(e);
+          }
 
      }catch (error) {
           console.log(error);
