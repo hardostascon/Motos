@@ -230,7 +230,19 @@ const changePassword = async (req, res) => {
 
 const EnviarRecuperador = async (req, res) => {
       try{  
-           send_email();
+          const UserIdentiy = req.user; 
+          let userToEmail = {
+               email: req.body.email.toLowerCase() ?? UserIdentiy.email
+          };
+           validate(userToEmail, false, false);
+           const user = await UserRepository.findByEmail(userToEmail.email, 2);
+           if (!user) {
+               return res.status(404).json({
+                    status: "error",
+                    message: "El usuario no existe"
+               });
+           }
+           send_email(userToEmail.email);
            return res.status(200).json({
                status: 200,
                message: "Accion Para enviar email de recuperacion",

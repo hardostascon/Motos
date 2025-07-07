@@ -11,15 +11,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail =  () => {
-   (async () => {
-  const info = await transporter.sendMail({
-    from: '"Maddison Foo Koch" <maddison53@ethereal.email>',
-    to: "hardos34@hotmail.com",
-    subject: "Hello ✔",
-    text: "Hello world?", // plain‑text body
-    html: "<b>Hello world?</b>", // HTML body
-  });
+const sendMail = (email) => {
+
+  (async () => {
+    const info = await transporter.sendMail(
+      {
+        from: '"Maddison Foo Koch" <maddison53@ethereal.email>',
+        to: email,
+        subject: "Correo de Recuperacion ✔",
+        text: "Recuperacion de Contraseña", // plain‑text body
+        html: "<b>Hello world?</b>", // HTML body
+      });
 
   console.log("Message sent:", info.messageId);
   console.log("Preview URL:", nodemailer.getTestMessageUrl(info));

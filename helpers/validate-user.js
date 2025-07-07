@@ -9,7 +9,7 @@ const validate = (params,withPassword=true ,withName=true) => {
         validator.isAlpha(params.name, "es-ES");
       }
     
-
+   // console.log("params", params.email);
     let email = !validator.isEmpty(params.email) &&
         validator.isEmail(params.email);
 
