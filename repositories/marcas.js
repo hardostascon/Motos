@@ -19,6 +19,42 @@ class MarcaRepository {
         }
     } 
 
+
+
+        static async findByMarca(marca_codigo) {
+        try {
+            const result = await Database.query('SELECT * FROM marca WHERE id = $1', [marca_codigo]);
+            console.log(result.rows[0]);
+            
+            return result.rows[0] ? new User(result.rows[0]) : null;
+
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+     static async updateFileMarca(id,archivo) {
+        try {
+            // password = $3 userData.password
+            const result = await Database.query(
+                `UPDATE marca 
+                 SET marca_imagen = $2,  updated_at = NOW() 
+                 WHERE id = $1 
+                 RETURNING *`,
+                [id, archivo]
+            );
+            
+  
+            return result.rows[0] ? new User(result.rows[0]) : null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
+
+
 
 module.exports = MarcaRepository; 
