@@ -53,6 +53,23 @@ class MarcaRepository {
         }
     }
 
+
+     static async updateMarca(id, MarcaData) {
+    try {
+      const result = await Database.query(
+        `UPDATE marca 
+         SET marca_nombre = $1, marca_descripcion = $2, marca_estado = $3, updated_at = NOW() 
+         WHERE id = $4 
+         RETURNING *`,
+        [MarcaData.marca_nombre, MarcaData.marca_descripcion, MarcaData.marca_estado, id]
+      );
+      
+      return result.rows[0] ? new User(result.rows[0]) : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 

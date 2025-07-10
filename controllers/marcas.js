@@ -2,10 +2,10 @@ const path = require("path");
 const fs = require("fs");
 const MarcaRepository = require('../repositories/marcas');
 const validate = require("../helpers/validate-marca");
-const GuardarMarcas = async (req,res) =>{
-     let body = req.body; 
+const GuardarMarcas = async (req, res) => {
+     let body = req.body;
      try {
-         
+
           validate(body);
 
           try {
@@ -14,53 +14,91 @@ const GuardarMarcas = async (req,res) =>{
                console.log(e);
           }
 
-     }catch (error) {
+     } catch (error) {
           console.log(error);
           return res.status(500).json({
-               status:500,
-               message:"Error al guardar la marca"
+               status: 500,
+               message: "Error al guardar la marca"
           })
      }
      return res.status(200).json({
-       status:200,
-       message:"Accion Para Guardar Marcas"
-   })
+          status: 200,
+          message: "Accion Para Guardar Marcas"
+     })
 }
 
 
-const ListarMarcas = (req,res) =>{
+const ListarMarcas = (req, res) => {
      return res.status(200).json({
-       status:200,
-       message:"Accion Para Listar Marcas"
-   })
+          status: 200,
+          message: "Accion Para Listar Marcas"
+     })
 }
 
 
-const ActualizarMarca = (req,res) =>{
+const ActualizarMarca = async (req, res) => {
+     let body = req.body;
+     try {
+          validate(body);
+
+          try {
+
+               const existingMarca = await MarcaRepository.findByMarca(req.body.id);
+               if (!existingMarca) {
+                    fs.unlinkSync(filePath); // Eliminar el archivo si la marca no existe
+                    return res.status(404).json({
+                         status: "error",
+                         message: "Marca no encontrada"
+                    });
+               }
+               const updatedMarca = await MarcaRepository.updateMarca(req.body.id, body);
+               if (!updatedMarca) {
+
+                    return res.status(500).json({
+                         status: "error",
+                         message: "Error al actualizar la marca"
+                    });
+               }
+
+          } catch (error) {
+               console.log(error);
+               return res.status(500).json({
+                    status: 500,
+                    message: "Error al actualizar la marca"
+               })
+          }
+
+     } catch (error) {
+          console.log(error);
+          return res.status(500).json({
+               status: 500,
+               message: "Error al actualizar la marca"
+          })
+     }
      return res.status(200).json({
-       status:200,
-       message:"Accion Para actualizar Marca"
-   })
+          status: 200,
+          message: "Accion Para actualizar Marca"
+     })
 }
 
 
-const BorrarMarca = (req,res) =>{
+const BorrarMarca = (req, res) => {
      return res.status(200).json({
-       status:200,
-       message:"Accion Para borrar Marca"
-   })
+          status: 200,
+          message: "Accion Para borrar Marca"
+     })
 }
 
 
-const BuscarMarca = (req,res) =>{
+const BuscarMarca = (req, res) => {
      return res.status(200).json({
-       status:200,
-       message:"Accion Para registrar usuario"
-   })
+          status: 200,
+          message: "Accion Para registrar usuario"
+     })
 }
 
 const UploadImagenMarca = async (req, res) => {
-     const id =  req.body.marca;
+     const id = req.body.marca;
      console.log(id);
      if (!req.file) {
           return res.status(400).json({
@@ -100,7 +138,7 @@ const UploadImagenMarca = async (req, res) => {
           return res.status(200).json({
                status: 200,
                updatedMarca,
-               message: "Accion Para registrar usuario"
+               message: "Imagen subida correctamente"
           })
 
      } catch (error) {
@@ -114,27 +152,27 @@ const UploadImagenMarca = async (req, res) => {
 }
 
 
-const MostarImagenMarca = (req,res) =>{
+const MostarImagenMarca = (req, res) => {
      let file = req.params.file;
-     let filePath =  "./uploads/marcas/"+file;
-    
-     fs.stat(filePath,(error,exist) =>{
-          if(!error && exist){
-               
+     let filePath = "./uploads/marcas/" + file;
+
+     fs.stat(filePath, (error, exist) => {
+          if (!error && exist) {
+
                return res.sendFile(path.resolve(filePath));
-          }else{
+          } else {
                console.log(error);
                console.log(exist);
                return res.status(404).json({
-                    status:404,
-                    message:"La imagen no existe"
+                    status: 404,
+                    message: "La imagen no existe"
                });
           }
-     } );
-     
+     });
+
 }
 
-module.exports={
+module.exports = {
      GuardarMarcas,
      ListarMarcas,
      ActualizarMarca,
