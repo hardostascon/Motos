@@ -17,7 +17,7 @@ const storage=multer.diskStorage({
 const uploadMarcas= multer({storage});
 
 router.post("/save",[auth], MarcasController.GuardarMarcas);
-router.get("/list/:page", MarcasController.ListarMarcas);
+router.get("/list/:page/:limit", MarcasController.ListarMarcas);
 router.put("/update", [auth],MarcasController.ActualizarMarca);
 router.delete("/remove/:id",[auth], MarcasController.BorrarMarca);
 router.get("/search/:search", MarcasController.BuscarMarca);

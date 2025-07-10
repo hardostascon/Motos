@@ -37,11 +37,33 @@ const GuardarMarcas = async (req, res) => {
 }
 
 
-const ListarMarcas = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para Listar Marcas"
-     })
+const ListarMarcas = async (req, res) => {
+     let page = req.params.page ? parseInt(req.params.page) : 1;
+     let limit = req.params.limit ? parseInt(req.params.limit) : 10;
+     try {
+
+          const marcas = await MarcaRepository.findWithMarcaPagination(page, limit);
+          if (!marcas) {
+               return res.status(404).json({
+                    status: "error",
+                    message: "No se encontraron marcas"
+               });
+          } else {
+               return res.status(200).json({
+                    status: 200,
+                    marcas,
+                    message: "Marcas listadas correctamente"
+               })
+          }
+
+     } catch(error){
+          console.log(error);
+          return res.status(500).json({
+               status: 500,
+               message: "Error al listar las marcas"
+          })
+     }
+    
 }
 
 
