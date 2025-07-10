@@ -38,8 +38,11 @@ const ListarMarcas = (req, res) => {
 
 const ActualizarMarca = async (req, res) => {
      let body = req.body;
+
      try {
+
           validate(body);
+
 
           try {
 
@@ -58,10 +61,16 @@ const ActualizarMarca = async (req, res) => {
                          status: "error",
                          message: "Error al actualizar la marca"
                     });
+               } else {
+                    return res.status(200).json({
+                         status: 200,
+                         updatedMarca,
+                         message: "datos actualizados correctamente"
+                    })
                }
 
           } catch (error) {
-               console.log(error);
+
                return res.status(500).json({
                     status: 500,
                     message: "Error al actualizar la marca"
@@ -75,10 +84,7 @@ const ActualizarMarca = async (req, res) => {
                message: "Error al actualizar la marca"
           })
      }
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para actualizar Marca"
-     })
+
 }
 
 
