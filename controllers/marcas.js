@@ -10,6 +10,18 @@ const GuardarMarcas = async (req, res) => {
 
           try {
                let MarcaToSave = await MarcaRepository.create(body);
+               if (!MarcaToSave) {
+                    return res.status(500).json({
+                         status: "error",
+                         message: "Error al guardar la marca"
+                    });
+               } else {
+                    return res.status(200).json({
+                         status: 200,
+                         MarcaToSave,
+                         message: "Marca guardada correctamente"
+                    })
+               }
           } catch (e) {
                console.log(e);
           }
@@ -21,10 +33,7 @@ const GuardarMarcas = async (req, res) => {
                message: "Error al guardar la marca"
           })
      }
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para Guardar Marcas"
-     })
+    
 }
 
 
@@ -48,7 +57,7 @@ const ActualizarMarca = async (req, res) => {
 
                const existingMarca = await MarcaRepository.findByMarca(req.body.id);
                if (!existingMarca) {
-                    fs.unlinkSync(filePath); // Eliminar el archivo si la marca no existe
+
                     return res.status(404).json({
                          status: "error",
                          message: "Marca no encontrada"
@@ -88,11 +97,42 @@ const ActualizarMarca = async (req, res) => {
 }
 
 
-const BorrarMarca = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para borrar Marca"
-     })
+const BorrarMarca = async (req, res) => {
+     const id = req.params.id;
+     console.log(id);
+     try {
+          const existingMarca = await MarcaRepository.findByMarca(req.params.id);
+          if (!existingMarca) {
+
+               return res.status(404).json({
+                    status: "error",
+                    message: "Marca no encontrada"
+               });
+          }
+
+          const deletedMarca = await MarcaRepository.deleteMarca(id);
+          if (!deletedMarca) {
+               return res.status(500).json({
+                    status: "error",
+                    message: "Error al borrar la marca"
+               });
+          } else {
+               return res.status(200).json({
+                    status: 200,
+                    message: "Marca borrarda correctamente"
+               })
+          }
+
+     }
+     catch (error) {
+          console.log(error);
+          return res.status(500).json({
+               status: 500,
+               message: "Error al borrar la marca"
+          })
+     }
+
+
 }
 
 

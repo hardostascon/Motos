@@ -19,7 +19,7 @@ const uploadMarcas= multer({storage});
 router.post("/save",[auth], MarcasController.GuardarMarcas);
 router.get("/list/:page", MarcasController.ListarMarcas);
 router.put("/update", [auth],MarcasController.ActualizarMarca);
-router.delete("/remove", MarcasController.BorrarMarca);
+router.delete("/remove/:id",[auth], MarcasController.BorrarMarca);
 router.get("/search/:search", MarcasController.BuscarMarca);
 router.put("/upload/", [auth,uploadMarcas.single("file0")],MarcasController.UploadImagenMarca);
 router.get("/imagenMarca/:file", MarcasController.MostarImagenMarca);
