@@ -158,11 +158,34 @@ const BorrarMarca = async (req, res) => {
 }
 
 
-const BuscarMarca = (req, res) => {
-     return res.status(200).json({
-          status: 200,
-          message: "Accion Para registrar usuario"
-     })
+const BuscarMarca = async (req, res) => {
+      let page = req.params.page ? parseInt(req.params.page) : 1;
+      let limit = req.params.limit ? parseInt(req.params.limit) : 10;
+      let word = req.params.search ? req.params.search : '-1';
+     try{
+           const marcas = await MarcaRepository.findWithMarcaPaginationWord(page, limit,word);
+          if (!marcas) {
+               return res.status(404).json({
+                    status: "error",
+                    message: "No se encontraron marcas"
+               });
+          } else {
+               return res.status(200).json({
+                    status: 200,
+                    marcas,
+                    message: "Marcas listadas correctamente"
+               })
+          }
+
+     }catch(e){
+           console.log(e);
+           return res.status(500).json({
+               status: 500,
+               message: "Error al generar La consulta"
+          })
+     }
+
+     
 }
 
 const UploadImagenMarca = async (req, res) => {

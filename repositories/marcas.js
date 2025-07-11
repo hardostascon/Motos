@@ -121,6 +121,51 @@ class MarcaRepository {
         }
     }
 
+
+    static async findWithMarcaPaginationWord(page = 1, limit = 10, word) {
+        try {
+            const offset = (page - 1) * limit;
+
+            // Consulta principal con LIMIT y OFFSET
+            const dataQuery = `
+            SELECT * 
+            FROM marca
+            WHERE to_tsvector('spanish', marca_nombre || ' ' || marca_descripcion  ) @@ plainto_tsquery('spanish', '${word}')
+            ORDER BY created_at DESC 
+            LIMIT $1 OFFSET $2
+        `;
+
+            // Consulta para contar el total de registros
+            const countQuery = `SELECT COUNT(*) as total FROM marca WHERE to_tsvector('spanish', marca_nombre || ' ' || marca_descripcion) @@ plainto_tsquery('spanish', '${word}')`;
+
+            // Ejecutar ambas consultas
+            const [dataResult, countResult] = await Promise.all([
+                Database.query(dataQuery, [limit, offset]),
+                Database.query(countQuery)
+            ]);
+
+            const marcas = dataResult.rows.map(row => new User(row));
+            const total = parseInt(countResult.rows[0].total);
+            const totalPages = Math.ceil(total / limit);
+
+            return {
+                data: marcas,
+                pagination: {
+                    currentPage: page,
+                    totalPages,
+                    totalRecords: total,
+                    limit,
+                    hasNextPage: page < totalPages,
+                    hasPrevPage: page > 1
+                }
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+
 }
 
 

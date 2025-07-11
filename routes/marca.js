@@ -20,7 +20,7 @@ router.post("/save",[auth], MarcasController.GuardarMarcas);
 router.get("/list/:page/:limit", MarcasController.ListarMarcas);
 router.put("/update", [auth],MarcasController.ActualizarMarca);
 router.delete("/remove/:id",[auth], MarcasController.BorrarMarca);
-router.get("/search/:search", MarcasController.BuscarMarca);
+router.get("/search/:page/:limit/:search", MarcasController.BuscarMarca);
 router.put("/upload/", [auth,uploadMarcas.single("file0")],MarcasController.UploadImagenMarca);
 router.get("/imagenMarca/:file", MarcasController.MostarImagenMarca);
 
